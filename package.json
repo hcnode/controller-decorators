@@ -1,6 +1,6 @@
 {
-  "name": "trafficlight",
-  "version": "3.2.3",
+  "name": "controller-decorators",
+  "version": "0.0.1",
   "description": "Flexible NodeJS Routing Decorators for API Routing",
   "main": "index.js",
   "scripts": {
