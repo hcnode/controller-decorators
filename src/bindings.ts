@@ -44,9 +44,9 @@ export function getArguments(params, ctx, next): any[] {
  * @returns {*}
  */
 export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl) => any): any {
+  var reactRouters = [];
   for(const ctrl of controllers) {
     const routes = Reflect.getMetadata(ROUTE_PREFIX, ctrl);
-    var reactRouters = [];
     for(const { method, url, middleware, name, params, view } of routes) {
       if(view){
         reactRouters.push({
