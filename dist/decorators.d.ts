@@ -51,6 +51,7 @@ export declare function Use(...middlewares: any[]): (target: any, propertyKey: s
  * @returns
  */
 export declare function Route(method: string, path?: string): (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => void;
+export declare function View(path: string): (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => void;
 /**
  * Get method decorator
  *

@@ -46,8 +46,13 @@ export function getArguments(params, ctx, next): any[] {
 export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl) => any): any {
   for(const ctrl of controllers) {
     const routes = Reflect.getMetadata(ROUTE_PREFIX, ctrl);
-
-    for(const { method, url, middleware, name, params } of routes) {
+    var reactRouters = [];
+    for(const { method, url, middleware, name, params, view } of routes) {
+      if(view){
+        reactRouters.push({
+          component : view, path : url
+        });
+      }
       routerRoutes[method](url, ...middleware, async function(ctx, next) {
         const inst = getter === undefined ?
           new ctrl() : getter(ctrl);
@@ -59,5 +64,5 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
       });
     }
   }
-  return routerRoutes;
+  return reactRouters;
 }

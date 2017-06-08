@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ROUTE_PREFIX, MW_PREFIX, PARAMS_PREFIX, ACTION_TYPES } from './constants';
+import { ROUTE_PREFIX, MW_PREFIX, PARAMS_PREFIX, ACTION_TYPES, VIEW } from './constants';
 
 /**
  * Class decorator for controller declaration
@@ -29,13 +29,15 @@ export function Controller(path: string = '') {
     for(const route of routeDefs) {
       const fnMws = Reflect.getMetadata(`${MW_PREFIX}_${route.name}`, proto) || [];
       const params = Reflect.getMetadata(`${PARAMS_PREFIX}_${route.name}`, proto) || [];
+      const view = Reflect.getMetadata(`${VIEW}_${route.name}`, proto);
 
       routes.push({
         method: route.method,
         url: path + route.path,
         middleware: [...mws, ...fnMws],
         name: route.name,
-        params
+        params,
+        view
       });
     }
 
@@ -95,6 +97,12 @@ export function Route(method: string, path: string = '') {
     const meta = Reflect.getMetadata(ROUTE_PREFIX, target) || [];
     meta.push({ method, path, name });
     Reflect.defineMetadata(ROUTE_PREFIX, meta, target);
+  };
+};
+
+export function View(path: string) {
+  return (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => {
+    Reflect.defineMetadata(VIEW, path, target);
   };
 };
 
