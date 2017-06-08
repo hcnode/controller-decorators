@@ -102,7 +102,7 @@ export function Route(method: string, path: string = '') {
 
 export function View(path: string) {
   return (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => {
-    Reflect.defineMetadata(VIEW, path, target);
+    Reflect.defineMetadata(VIEW + '_' + name, path, target);
   };
 };
 
