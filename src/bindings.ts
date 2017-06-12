@@ -47,7 +47,7 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
   var reactRouters = [];
   for(const ctrl of controllers) {
     const routes = Reflect.getMetadata(ROUTE_PREFIX, ctrl);
-    for(const { method, url, middleware, name, params, view } of routes) {
+    for(const { method, url, middleware, name, params, view, response } of routes) {
       if(view){
         reactRouters.push({
           component : view, path : url
@@ -59,7 +59,13 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
 
         const args = getArguments(params, ctx, next);
         const result = inst[name](...args);
-        if(result) ctx.body = await result;
+        if(response){
+          response(ctx, await result)
+        }else{
+          if(result) {
+            ctx.body = await result;
+          }
+        }
         return result;
       });
     }
