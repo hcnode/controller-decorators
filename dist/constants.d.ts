@@ -3,6 +3,7 @@ export declare const ROUTE_PREFIX: string;
 export declare const MW_PREFIX: string;
 export declare const PATH: string;
 export declare const VIEW: string;
+export declare const RESPONSE: string;
 export declare const ACTION_TYPES: {
     HEAD: string;
     GET: string;

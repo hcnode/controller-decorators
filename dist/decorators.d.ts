@@ -128,69 +128,11 @@ export declare function Inject(fn: any): (target: any, name: string, index: numb
  */
 export declare function Ctx(): (target: any, name: string, index: number) => void;
 /**
- * Node request object constructor decorator. This is a
- * shortcut for `ctx.req`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Req() req) { ... }
- *    }
- *
+ 
  * @export
  * @returns
  */
-export declare function Req(): (target: any, name: string, index: number) => void;
-/**
- * KOA request object constructor decorator. This is a
- * shortcut for `ctx.request`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Request() request) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export declare function Request(): (target: any, name: string, index: number) => void;
-/**
- * Node response object constructor decorator. This is a
- * shortcut for `ctx.res`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Res() res) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export declare function Res(): (target: any, name: string, index: number) => void;
-/**
- * KOA response object constructor decorator. This is a
- * shortcut for `ctx.response`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Response() response) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export declare function Response(): (target: any, name: string, index: number) => void;
+export declare function Response(response: any): (target: any, name: string, index: number) => void;
 /**
  * Body constructor decorator
  *

@@ -3,7 +3,7 @@ export const ROUTE_PREFIX: string = '$routes';
 export const MW_PREFIX: string = '$mw';
 export const PATH: string = '$path';
 export const VIEW: string = '$view';
-export const Response: string = '$response';
+export const RESPONSE: string = '$response';
 
 export const ACTION_TYPES = {
   HEAD: 'head',
