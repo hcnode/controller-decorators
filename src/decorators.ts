@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { ROUTE_PREFIX, MW_PREFIX, PARAMS_PREFIX, ACTION_TYPES, VIEW } from './constants';
+import { ROUTE_PREFIX, MW_PREFIX, PARAMS_PREFIX, ACTION_TYPES, VIEW, RESPONSE } from './constants';
 
 /**
  * Class decorator for controller declaration
@@ -30,6 +30,7 @@ export function Controller(path: string = '') {
       const fnMws = Reflect.getMetadata(`${MW_PREFIX}_${route.name}`, proto) || [];
       const params = Reflect.getMetadata(`${PARAMS_PREFIX}_${route.name}`, proto) || [];
       const view = Reflect.getMetadata(`${VIEW}_${route.name}`, proto);
+      const response = Reflect.getMetadata(`${RESPONSE}_${route.name}`, proto);
 
       routes.push({
         method: route.method,
@@ -37,7 +38,8 @@ export function Controller(path: string = '') {
         middleware: [...mws, ...fnMws],
         name: route.name,
         params,
-        view
+        view,
+        response
       });
     }
 
@@ -105,6 +107,7 @@ export function View(path: string) {
     Reflect.defineMetadata(VIEW + '_' + name, path, target);
   };
 };
+
 
 /**
  * Get method decorator
@@ -203,80 +206,17 @@ export function Ctx() {
   return Inject((ctx) => ctx);
 }
 
-/**
- * Node request object constructor decorator. This is a
- * shortcut for `ctx.req`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Req() req) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export function Req() {
-  return Inject((ctx) => ctx.req);
-}
+
 
 /**
- * KOA request object constructor decorator. This is a
- * shortcut for `ctx.request`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Request() request) { ... }
- *    }
- *
+ 
  * @export
  * @returns
  */
-export function Request() {
-  return Inject((ctx) => ctx.request);
-}
-
-/**
- * Node response object constructor decorator. This is a
- * shortcut for `ctx.res`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Res() res) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export function Res() {
-  return Inject((ctx) => ctx.res);
-}
-
-/**
- * KOA response object constructor decorator. This is a
- * shortcut for `ctx.response`.
- *
- * Example:
- *
- *    @Controller()
- *    export class MyController {
- *      @Post()
- *      post(@Response() response) { ... }
- *    }
- *
- * @export
- * @returns
- */
-export function Response() {
-  return Inject((ctx) => ctx.response);
+export function Response(response) {
+  return function(target: any, name: string, index: number) {
+    Reflect.defineMetadata(`${RESPONSE}_${name}`, response, target);
+  };
 }
 
 /**
