@@ -1,12 +1,7 @@
 "use strict";
-
-function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
-var constants_1 = require("./constants");
+const constants_1 = require("./constants");
 /**
  * Given a list of params, execute each with the context.
  *
@@ -15,38 +10,18 @@ var constants_1 = require("./constants");
  * @param next
  */
 function getArguments(params, ctx, next) {
-    var args = [ctx, next];
+    let args = [ctx, next];
     if (params) {
         args = [];
         // sort by index
-        params.sort(function (a, b) {
+        params.sort((a, b) => {
             return a.index - b.index;
         });
-        var _iteratorNormalCompletion = true;
-        var _didIteratorError = false;
-        var _iteratorError = undefined;
-
-        try {
-            for (var _iterator = params[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                var param = _step.value;
-
-                var result = void 0;
-                if (param !== undefined) result = param.fn(ctx);
-                args.push(result);
-            }
-        } catch (err) {
-            _didIteratorError = true;
-            _iteratorError = err;
-        } finally {
-            try {
-                if (!_iteratorNormalCompletion && _iterator.return) {
-                    _iterator.return();
-                }
-            } finally {
-                if (_didIteratorError) {
-                    throw _iteratorError;
-                }
-            }
+        for (const param of params) {
+            let result;
+            if (param !== undefined)
+                result = param.fn(ctx);
+            args.push(result);
         }
     }
     return args;
@@ -68,135 +43,38 @@ exports.getArguments = getArguments;
  */
 function bindRoutes(routerRoutes, controllers, getter) {
     var reactRouters = [];
-    var _iteratorNormalCompletion2 = true;
-    var _didIteratorError2 = false;
-    var _iteratorError2 = undefined;
-
-    try {
-        var _loop = function _loop() {
-            var ctrl = _step2.value;
-            routes = Reflect.getMetadata(constants_1.ROUTE_PREFIX, ctrl);
-
-            if (routes) {
-                ctrl[constants_1.ROUTE_PREFIX] = routes;
-            } else {
-                routes = ctrl[constants_1.ROUTE_PREFIX];
-            }
-            var _iteratorNormalCompletion3 = true;
-            var _didIteratorError3 = false;
-            var _iteratorError3 = undefined;
-
-            try {
-                var _loop2 = function _loop2() {
-                    var _ref = _step3.value;
-                    var method = _ref.method,
-                        url = _ref.url,
-                        middleware = _ref.middleware,
-                        name = _ref.name,
-                        params = _ref.params,
-                        view = _ref.view,
-                        response = _ref.response;
-
-                    if (view) {
-                        reactRouters.push({
-                            component: view, path: url
-                        });
-                    }
-                    routerRoutes[method].apply(routerRoutes, [url].concat(_toConsumableArray(middleware), [function () {
-                        var _ref2 = _asyncToGenerator(regeneratorRuntime.mark(function _callee(ctx, next) {
-                            var inst, args, result;
-                            return regeneratorRuntime.wrap(function _callee$(_context) {
-                                while (1) {
-                                    switch (_context.prev = _context.next) {
-                                        case 0:
-                                            inst = getter === undefined ? new ctrl() : getter(ctrl);
-                                            args = getArguments(params, ctx, next);
-                                            result = inst[name].apply(inst, _toConsumableArray(args));
-
-                                            if (!response) {
-                                                _context.next = 12;
-                                                break;
-                                            }
-
-                                            _context.t0 = response;
-                                            _context.t1 = ctx;
-                                            _context.next = 8;
-                                            return result;
-
-                                        case 8:
-                                            _context.t2 = _context.sent;
-                                            (0, _context.t0)(_context.t1, _context.t2);
-                                            _context.next = 16;
-                                            break;
-
-                                        case 12:
-                                            if (!result) {
-                                                _context.next = 16;
-                                                break;
-                                            }
-
-                                            _context.next = 15;
-                                            return result;
-
-                                        case 15:
-                                            ctx.body = _context.sent;
-
-                                        case 16:
-                                            return _context.abrupt("return", result);
-
-                                        case 17:
-                                        case "end":
-                                            return _context.stop();
-                                    }
-                                }
-                            }, _callee, this);
-                        }));
-
-                        return function (_x, _x2) {
-                            return _ref2.apply(this, arguments);
-                        };
-                    }()]));
-                };
-
-                for (var _iterator3 = routes[Symbol.iterator](), _step3; !(_iteratorNormalCompletion3 = (_step3 = _iterator3.next()).done); _iteratorNormalCompletion3 = true) {
-                    _loop2();
-                }
-            } catch (err) {
-                _didIteratorError3 = true;
-                _iteratorError3 = err;
-            } finally {
-                try {
-                    if (!_iteratorNormalCompletion3 && _iterator3.return) {
-                        _iterator3.return();
-                    }
-                } finally {
-                    if (_didIteratorError3) {
-                        throw _iteratorError3;
-                    }
-                }
-            }
-        };
-
-        for (var _iterator2 = controllers[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-            var routes;
-
-            _loop();
+    for (const ctrl of controllers) {
+        var routes = Reflect.getMetadata(constants_1.ROUTE_PREFIX, ctrl);
+        if (routes) {
+            ctrl[constants_1.ROUTE_PREFIX] = routes;
         }
-    } catch (err) {
-        _didIteratorError2 = true;
-        _iteratorError2 = err;
-    } finally {
-        try {
-            if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                _iterator2.return();
+        else {
+            routes = ctrl[constants_1.ROUTE_PREFIX];
+        }
+        for (const { method, url, middleware, name, params, view, response } of routes) {
+            if (view) {
+                reactRouters.push({
+                    component: view, path: url
+                });
             }
-        } finally {
-            if (_didIteratorError2) {
-                throw _iteratorError2;
-            }
+            routerRoutes[method](url, ...middleware, async function (ctx, next) {
+                const inst = getter === undefined ?
+                    new ctrl() : getter(ctrl);
+                const args = getArguments(params, ctx, next);
+                const result = inst[name](...args);
+                if (response) {
+                    response(ctx, await result);
+                }
+                else {
+                    if (result) {
+                        ctx.body = await result;
+                    }
+                }
+                return result;
+            });
         }
     }
-
     return reactRouters;
 }
 exports.bindRoutes = bindRoutes;
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJmaWxlIjoiYmluZGluZ3MuanMiLCJzb3VyY2VSb290IjoiIiwic291cmNlcyI6WyIuLi9zcmMvYmluZGluZ3MudHMiXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6Ijs7QUFBQSw0QkFBMEI7QUFDMUIsMkNBQTJDO0FBRTNDOzs7Ozs7R0FNRztBQUNILHNCQUE2QixNQUFNLEVBQUUsR0FBRyxFQUFFLElBQUk7SUFDNUMsSUFBSSxJQUFJLEdBQUcsQ0FBQyxHQUFHLEVBQUUsSUFBSSxDQUFDLENBQUM7SUFFdkIsRUFBRSxDQUFBLENBQUMsTUFBTSxDQUFDLENBQUMsQ0FBQztRQUNWLElBQUksR0FBRyxFQUFFLENBQUM7UUFFVixnQkFBZ0I7UUFDaEIsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDLENBQUMsRUFBRSxDQUFDO1lBQ2YsTUFBTSxDQUFDLENBQUMsQ0FBQyxLQUFLLEdBQUcsQ0FBQyxDQUFDLEtBQUssQ0FBQztRQUMzQixDQUFDLENBQUMsQ0FBQztRQUVILEdBQUcsQ0FBQSxDQUFDLE1BQU0sS0FBSyxJQUFJLE1BQU0sQ0FBQyxDQUFDLENBQUM7WUFDMUIsSUFBSSxNQUFNLENBQUM7WUFDWCxFQUFFLENBQUEsQ0FBQyxLQUFLLEtBQUssU0FBUyxDQUFDO2dCQUFDLE1BQU0sR0FBRyxLQUFLLENBQUMsRUFBRSxDQUFDLEdBQUcsQ0FBQyxDQUFDO1lBQy9DLElBQUksQ0FBQyxJQUFJLENBQUMsTUFBTSxDQUFDLENBQUM7UUFDcEIsQ0FBQztJQUNILENBQUM7SUFFRCxNQUFNLENBQUMsSUFBSSxDQUFDO0FBQ2QsQ0FBQztBQW5CRCxvQ0FtQkM7QUFFRDs7Ozs7Ozs7Ozs7OztHQWFHO0FBQ0gsb0JBQTJCLFlBQWlCLEVBQUUsV0FBa0IsRUFBRSxNQUFzQjtJQUN0RixJQUFJLFlBQVksR0FBRyxFQUFFLENBQUM7SUFDdEIsR0FBRyxDQUFBLENBQUMsTUFBTSxJQUFJLElBQUksV0FBVyxDQUFDLENBQUMsQ0FBQztRQUM5QixJQUFJLE1BQU0sR0FBRyxPQUFPLENBQUMsV0FBVyxDQUFDLHdCQUFZLEVBQUUsSUFBSSxDQUFDLENBQUM7UUFDckQsRUFBRSxDQUFBLENBQUMsTUFBTSxDQUFDLENBQUEsQ0FBQztZQUNkLElBQUksQ0FBQyx3QkFBWSxDQUFDLEdBQUcsTUFBTSxDQUFDO1FBQ3pCLENBQUM7UUFBQSxJQUFJLENBQUEsQ0FBQztZQUNMLE1BQU0sR0FBRyxJQUFJLENBQUMsd0JBQVksQ0FBQyxDQUFDO1FBQzdCLENBQUM7UUFDRCxHQUFHLENBQUEsQ0FBQyxNQUFNLEVBQUUsTUFBTSxFQUFFLEdBQUcsRUFBRSxVQUFVLEVBQUUsSUFBSSxFQUFFLE1BQU0sRUFBRSxJQUFJLEVBQUUsUUFBUSxFQUFFLElBQUksTUFBTSxDQUFDLENBQUMsQ0FBQztZQUM5RSxFQUFFLENBQUEsQ0FBQyxJQUFJLENBQUMsQ0FBQSxDQUFDO2dCQUNQLFlBQVksQ0FBQyxJQUFJLENBQUM7b0JBQ2hCLFNBQVMsRUFBRyxJQUFJLEVBQUUsSUFBSSxFQUFHLEdBQUc7aUJBQzdCLENBQUMsQ0FBQztZQUNMLENBQUM7WUFDRCxZQUFZLENBQUMsTUFBTSxDQUFDLENBQUMsR0FBRyxFQUFFLEdBQUcsVUFBVSxFQUFFLEtBQUssV0FBVSxHQUFHLEVBQUUsSUFBSTtnQkFDL0QsTUFBTSxJQUFJLEdBQUcsTUFBTSxLQUFLLFNBQVM7b0JBQy9CLElBQUksSUFBSSxFQUFFLEdBQUcsTUFBTSxDQUFDLElBQUksQ0FBQyxDQUFDO2dCQUU1QixNQUFNLElBQUksR0FBRyxZQUFZLENBQUMsTUFBTSxFQUFFLEdBQUcsRUFBRSxJQUFJLENBQUMsQ0FBQztnQkFDN0MsTUFBTSxNQUFNLEdBQUcsSUFBSSxDQUFDLElBQUksQ0FBQyxDQUFDLEdBQUcsSUFBSSxDQUFDLENBQUM7Z0JBQ25DLEVBQUUsQ0FBQSxDQUFDLFFBQVEsQ0FBQyxDQUFBLENBQUM7b0JBQ1gsUUFBUSxDQUFDLEdBQUcsRUFBRSxNQUFNLE1BQU0sQ0FBQyxDQUFBO2dCQUM3QixDQUFDO2dCQUFBLElBQUksQ0FBQSxDQUFDO29CQUNKLEVBQUUsQ0FBQSxDQUFDLE1BQU0sQ0FBQyxDQUFDLENBQUM7d0JBQ1YsR0FBRyxDQUFDLElBQUksR0FBRyxNQUFNLE1BQU0sQ0FBQztvQkFDMUIsQ0FBQztnQkFDSCxDQUFDO2dCQUNELE1BQU0sQ0FBQyxNQUFNLENBQUM7WUFDaEIsQ0FBQyxDQUFDLENBQUM7UUFDTCxDQUFDO0lBQ0gsQ0FBQztJQUNELE1BQU0sQ0FBQyxZQUFZLENBQUM7QUFDdEIsQ0FBQztBQWpDRCxnQ0FpQ0MiLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgJ3JlZmxlY3QtbWV0YWRhdGEnO1xuaW1wb3J0IHsgUk9VVEVfUFJFRklYIH0gZnJvbSAnLi9jb25zdGFudHMnO1xuXG4vKipcbiAqIEdpdmVuIGEgbGlzdCBvZiBwYXJhbXMsIGV4ZWN1dGUgZWFjaCB3aXRoIHRoZSBjb250ZXh0LlxuICpcbiAqIEBwYXJhbSBwYXJhbXNcbiAqIEBwYXJhbSBjdHhcbiAqIEBwYXJhbSBuZXh0XG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBnZXRBcmd1bWVudHMocGFyYW1zLCBjdHgsIG5leHQpOiBhbnlbXSB7XG4gIGxldCBhcmdzID0gW2N0eCwgbmV4dF07XG5cbiAgaWYocGFyYW1zKSB7XG4gICAgYXJncyA9IFtdO1xuXG4gICAgLy8gc29ydCBieSBpbmRleFxuICAgIHBhcmFtcy5zb3J0KChhLCBiKSA9PiB7XG4gICAgICByZXR1cm4gYS5pbmRleCAtIGIuaW5kZXg7XG4gICAgfSk7XG5cbiAgICBmb3IoY29uc3QgcGFyYW0gb2YgcGFyYW1zKSB7XG4gICAgICBsZXQgcmVzdWx0O1xuICAgICAgaWYocGFyYW0gIT09IHVuZGVmaW5lZCkgcmVzdWx0ID0gcGFyYW0uZm4oY3R4KTtcbiAgICAgIGFyZ3MucHVzaChyZXN1bHQpO1xuICAgIH1cbiAgfVxuXG4gIHJldHVybiBhcmdzO1xufVxuXG4vKipcbiAqIEJpbmRzIHRoZSByb3V0ZXMgdG8gdGhlIHJvdXRlclxuICpcbiAqIEV4YW1wbGU6XG4gKlxuICogICAgY29uc3Qgcm91dGVyID0gbmV3IFJvdXRlcigpO1xuICogICAgYmluZFJvdXRlcyhyb3V0ZXIsIFtQcm9maWxlQ29udHJvbGxlcl0pO1xuICpcbiAqIEBleHBvcnRcbiAqIEBwYXJhbSB7Kn0gcm91dGVyUm91dGVzXG4gKiBAcGFyYW0ge2FueVtdfSBjb250cm9sbGVyc1xuICogQHBhcmFtIHsoY3RybCkgPT4gYW55fSBbZ2V0dGVyXVxuICogQHJldHVybnMgeyp9XG4gKi9cbmV4cG9ydCBmdW5jdGlvbiBiaW5kUm91dGVzKHJvdXRlclJvdXRlczogYW55LCBjb250cm9sbGVyczogYW55W10sIGdldHRlcj86IChjdHJsKSA9PiBhbnkpOiBhbnkge1xuICB2YXIgcmVhY3RSb3V0ZXJzID0gW107XG4gIGZvcihjb25zdCBjdHJsIG9mIGNvbnRyb2xsZXJzKSB7XG4gICAgdmFyIHJvdXRlcyA9IFJlZmxlY3QuZ2V0TWV0YWRhdGEoUk9VVEVfUFJFRklYLCBjdHJsKTtcbiAgICBpZihyb3V0ZXMpe1xuXHRjdHJsW1JPVVRFX1BSRUZJWF0gPSByb3V0ZXM7XG4gICAgfWVsc2V7XG4gICAgXHRyb3V0ZXMgPSBjdHJsW1JPVVRFX1BSRUZJWF07XG4gICAgfVxuICAgIGZvcihjb25zdCB7IG1ldGhvZCwgdXJsLCBtaWRkbGV3YXJlLCBuYW1lLCBwYXJhbXMsIHZpZXcsIHJlc3BvbnNlIH0gb2Ygcm91dGVzKSB7XG4gICAgICBpZih2aWV3KXtcbiAgICAgICAgcmVhY3RSb3V0ZXJzLnB1c2goe1xuICAgICAgICAgIGNvbXBvbmVudCA6IHZpZXcsIHBhdGggOiB1cmxcbiAgICAgICAgfSk7XG4gICAgICB9XG4gICAgICByb3V0ZXJSb3V0ZXNbbWV0aG9kXSh1cmwsIC4uLm1pZGRsZXdhcmUsIGFzeW5jIGZ1bmN0aW9uKGN0eCwgbmV4dCkge1xuICAgICAgICBjb25zdCBpbnN0ID0gZ2V0dGVyID09PSB1bmRlZmluZWQgP1xuICAgICAgICAgIG5ldyBjdHJsKCkgOiBnZXR0ZXIoY3RybCk7XG5cbiAgICAgICAgY29uc3QgYXJncyA9IGdldEFyZ3VtZW50cyhwYXJhbXMsIGN0eCwgbmV4dCk7XG4gICAgICAgIGNvbnN0IHJlc3VsdCA9IGluc3RbbmFtZV0oLi4uYXJncyk7XG4gICAgICAgIGlmKHJlc3BvbnNlKXtcbiAgICAgICAgICByZXNwb25zZShjdHgsIGF3YWl0IHJlc3VsdClcbiAgICAgICAgfWVsc2V7XG4gICAgICAgICAgaWYocmVzdWx0KSB7XG4gICAgICAgICAgICBjdHguYm9keSA9IGF3YWl0IHJlc3VsdDtcbiAgICAgICAgICB9XG4gICAgICAgIH1cbiAgICAgICAgcmV0dXJuIHJlc3VsdDtcbiAgICAgIH0pO1xuICAgIH1cbiAgfVxuICByZXR1cm4gcmVhY3RSb3V0ZXJzO1xufVxuIl19

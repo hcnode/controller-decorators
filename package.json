@@ -4,7 +4,7 @@
   "description": "Flexible NodeJS Routing Decorators for API Routing",
   "main": "index.js",
   "scripts": {
-    "build": "tsc && node compile.js",
+    "build": "tsc",
     "lint": "tslint src/index.ts"
   },
   "repository": {
