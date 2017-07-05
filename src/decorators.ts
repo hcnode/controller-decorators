@@ -44,6 +44,7 @@ export function Controller(path: string = '') {
     }
 
     Reflect.defineMetadata(ROUTE_PREFIX, routes, target);
+    target[ROUTE_PREFIX] = routes;
   };
 };
 

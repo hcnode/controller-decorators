@@ -11,7 +11,7 @@ import { ROUTE_PREFIX } from './constants';
 export function getArguments(params, ctx, next): any[] {
   let args = [ctx, next];
 
-  if(params) {
+  if (params) {
     args = [];
 
     // sort by index
@@ -19,9 +19,9 @@ export function getArguments(params, ctx, next): any[] {
       return a.index - b.index;
     });
 
-    for(const param of params) {
+    for (const param of params) {
       let result;
-      if(param !== undefined) result = param.fn(ctx);
+      if (param !== undefined) result = param.fn(ctx);
       args.push(result);
     }
   }
@@ -45,29 +45,29 @@ export function getArguments(params, ctx, next): any[] {
  */
 export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl) => any): any {
   var reactRouters = [];
-  for(const ctrl of controllers) {
+  for (const ctrl of controllers) {
     var routes = Reflect.getMetadata(ROUTE_PREFIX, ctrl);
-    if(routes){
-	ctrl[ROUTE_PREFIX] = routes;
-    }else{
-    	routes = ctrl[ROUTE_PREFIX];
+    if (routes) {
+      ctrl[ROUTE_PREFIX] = routes;
+    } else {
+      routes = ctrl[ROUTE_PREFIX];
     }
-    for(const { method, url, middleware, name, params, view, response } of routes) {
-      if(view){
+    for (const { method, url, middleware, name, params, view, response } of routes) {
+      if (view) {
         reactRouters.push({
-          component : view, path : url
+          component: view, path: url
         });
       }
-      routerRoutes[method](url, ...middleware, async function(ctx, next) {
+      routerRoutes[method](url, ...middleware, async function (ctx, next) {
         const inst = getter === undefined ?
           new ctrl() : getter(ctrl);
 
         const args = getArguments(params, ctx, next);
         const result = inst[name](...args);
-        if(response){
+        if (response) {
           response(ctx, await result)
-        }else{
-          if(result) {
+        } else {
+          if (result) {
             ctx.body = await result;
           }
         }
