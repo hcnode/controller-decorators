@@ -57,8 +57,8 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
         reactRouters.push({
           component: view, path: url
         });
-      }else{
-        routerRoutes[method](url, ...middleware, async function (ctx, next) {
+      } else {
+        middleware.push(async function (ctx, next) {
           const inst = getter === undefined ?
             new ctrl() : getter(ctrl);
 
@@ -74,6 +74,7 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
           return result;
         });
       }
+      routerRoutes[method](url, ...middleware);
     }
   }
   return reactRouters;
