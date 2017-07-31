@@ -53,15 +53,15 @@ export function bindRoutes(routerRoutes: any, controllers: any[], getter?: (ctrl
       routes = ctrl[ROUTE_PREFIX];
     }
     for (const { method, url, middleware, name, params, view, response } of routes) {
+      const inst = getter === undefined ?
+        new ctrl() : getter(ctrl);
+
       if (view) {
         reactRouters.push({
-          component: view, path: url
+          component: view, path: url, func : inst[name], args : (ctx, next) => getArguments(params, ctx, next)
         });
       } else {
         middleware.push(async function (ctx, next) {
-          const inst = getter === undefined ?
-            new ctrl() : getter(ctrl);
-
           const args = getArguments(params, ctx, next);
           const result = inst[name](...args);
           if (response) {
