@@ -35,7 +35,8 @@ export function Controller(path: string = '') {
       routes.push({
         method: route.method,
         url: path + route.path,
-        middleware: [...mws, ...fnMws],
+        // override mode like sails.js
+        middleware: fnMws ? [...fnMws] : [...mws],
         name: route.name,
         params,
         view,
