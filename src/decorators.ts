@@ -183,7 +183,7 @@ export function Delete(path?: string) {
  * @returns
  */
 export function Inject(fn) {
-  return function(target: any, name: string, index: number) {
+  return function(target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
     const meta = Reflect.getMetadata(`${PARAMS_PREFIX}_${name}`, target) || [];
     meta.push({ index, name, fn });
     Reflect.defineMetadata(`${PARAMS_PREFIX}_${name}`, meta, target);
@@ -216,7 +216,7 @@ export function Ctx() {
  * @returns
  */
 export function Response(response) {
-  return function(target: any, name: string, index: number) {
+  return function(target: any, name: string, descriptor: TypedPropertyDescriptor<any>) {
     Reflect.defineMetadata(`${RESPONSE}_${name}`, response, target);
   };
 }
