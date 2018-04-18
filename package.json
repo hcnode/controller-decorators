@@ -2,7 +2,8 @@
   "name": "controller-decorators",
   "version": "0.0.1",
   "description": "Flexible NodeJS Routing Decorators for API Routing",
-  "main": "index.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "lint": "tslint src/index.ts"
