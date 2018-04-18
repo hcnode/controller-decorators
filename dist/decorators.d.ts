@@ -111,7 +111,7 @@ export declare function Delete(path?: string): (target: any, name: string, descr
  * @param {any} fn
  * @returns
  */
-export declare function Inject(fn: any): (target: any, name: string, index: number) => void;
+export declare function Inject(fn: any): (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => void;
 /**
  * KOA context constructor decorator
  *
@@ -132,7 +132,7 @@ export declare function Ctx(): (target: any, name: string, index: number) => voi
  * @export
  * @returns
  */
-export declare function Response(response: any): (target: any, name: string, index: number) => void;
+export declare function Response(response: any): (target: any, name: string, descriptor: TypedPropertyDescriptor<any>) => void;
 /**
  * Body constructor decorator
  *
